@@ -337,7 +337,17 @@ export default function ServiceDetailPage({
 
   const handleAddToCart = () => {
     setIsAddingToCart(true);
-    // Simulate API call
+
+    // Obține coșul existent din localStorage sau inițializează unul nou
+    const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+    // Adaugă produsul curent în coș
+    const updatedCart = [...existingCart, service];
+
+    // Salvează coșul actualizat în localStorage
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+    // Simulează un apel API și redirecționează după 1 secundă
     setTimeout(() => {
       setIsAddingToCart(false);
       router.push("/checkout");
