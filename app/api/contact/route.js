@@ -1,24 +1,22 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { db } from "@/lib/firebase";
+import { collection, addDoc } from "firebase/firestore";
 
 export async function POST(req) {
   try {
     const body = await req.json();
 
-    // Salvează în baza de date
-    const message = await prisma.contactMessage.create({
-      data: {
-        firstName: body.firstName,
-        lastName: body.lastName,
-        email: body.email,
-        phone: body.phone,
-        inquiryType: body.inquiryType,
-        message: body.message,
-      },
+    // Salvează în Firestore
+    const docRef = await addDoc(collection(db, "contactMessages"), {
+      firstName: body.firstName,
+      lastName: body.lastName,
+      email: body.email,
+      phone: body.phone,
+      inquiryType: body.inquiryType,
+      message: body.message,
+      createdAt: new Date(),
     });
 
-    return new Response(JSON.stringify({ success: true, message }), {
+    return new Response(JSON.stringify({ success: true, id: docRef.id }), {
       status: 201,
     });
   } catch (error) {
